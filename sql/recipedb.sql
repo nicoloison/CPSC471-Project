@@ -73,6 +73,31 @@ INSERT INTO `cookbook_recipe` VALUES ('Liam\'s Cookbook','lmitchell','mac and ch
 UNLOCK TABLES;
 
 --
+-- Table structure for table `dietary_restrictions`
+--
+
+DROP TABLE IF EXISTS `dietary_restrictions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dietary_restrictions` (
+  `name` varchar(255) NOT NULL,
+  `ingredient` varchar(255) NOT NULL,
+  PRIMARY KEY (`name`),
+  KEY `ingredient` (`ingredient`),
+  CONSTRAINT `dietary_restrictions_ibfk_1` FOREIGN KEY (`ingredient`) REFERENCES `ingredient` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dietary_restrictions`
+--
+
+LOCK TABLES `dietary_restrictions` WRITE;
+/*!40000 ALTER TABLE `dietary_restrictions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dietary_restrictions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ingredient`
 --
 
@@ -157,6 +182,62 @@ INSERT INTO `recipe_ingredient` VALUES ('mac and cheese','cheese',3.00,'cups'),(
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_cookbook_ratings`
+--
+
+DROP TABLE IF EXISTS `user_cookbook_ratings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_cookbook_ratings` (
+  `user_name` varchar(255) NOT NULL,
+  `cookbook_name` varchar(255) NOT NULL,
+  `author_name` varchar(255) NOT NULL,
+  `rating` int(1) NOT NULL,
+  PRIMARY KEY (`user_name`,`cookbook_name`,`author_name`),
+  KEY `cookbook_name` (`cookbook_name`,`author_name`),
+  CONSTRAINT `user_cookbook_ratings_ibfk_1` FOREIGN KEY (`cookbook_name`, `author_name`) REFERENCES `cookbook` (`name`, `author_name`),
+  CONSTRAINT `user_cookbook_ratings_ibfk_2` FOREIGN KEY (`user_name`) REFERENCES `users` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_cookbook_ratings`
+--
+
+LOCK TABLES `user_cookbook_ratings` WRITE;
+/*!40000 ALTER TABLE `user_cookbook_ratings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_cookbook_ratings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_recipe_ratings`
+--
+
+DROP TABLE IF EXISTS `user_recipe_ratings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_recipe_ratings` (
+  `user_name` varchar(255) NOT NULL,
+  `recipe_name` varchar(255) NOT NULL,
+  `author_name` varchar(255) NOT NULL,
+  `rating` int(1) NOT NULL,
+  PRIMARY KEY (`user_name`,`recipe_name`,`author_name`),
+  KEY `recipe_name` (`recipe_name`,`author_name`),
+  CONSTRAINT `user_recipe_ratings_ibfk_1` FOREIGN KEY (`recipe_name`, `author_name`) REFERENCES `recipe` (`name`, `author_name`),
+  CONSTRAINT `user_recipe_ratings_ibfk_2` FOREIGN KEY (`user_name`) REFERENCES `users` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_recipe_ratings`
+--
+
+LOCK TABLES `user_recipe_ratings` WRITE;
+/*!40000 ALTER TABLE `user_recipe_ratings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_recipe_ratings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -189,4 +270,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-18 12:04:53
+-- Dump completed on 2014-11-21 19:48:05

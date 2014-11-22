@@ -1,26 +1,16 @@
 <?php   
-function add_param(&$query, &$operator, $attribute, $value)
-{
-    $query .= $operator;
-    if ($operator == " WHERE ") {
-        $operator = " AND ";
-    }
 
-    $query .= $attribute;
-    $query .= " = ";
-    $query .= $value;
-    $query .= " ";
-}
+$attributes = [
+               "name",
+               "author_name",
+               "rating",
+               "dietary_restriction"
+               ];
 
-function build_query()
-{
-    $ret = "SELECT * FROM recipe";
-    $operator = " WHERE ";
-
-    if (isset($_GET['author_name'])) {
-        add_param($ret, $operator, 'author_name', $_GET['author_name']);
-    }   
-}
+$modifiers = [
+              "show_only",
+              "sort_by",
+              ];
 
 $mysqli = new mysqli("localhost", "sql", "sql-pwd", "recipedb");
 

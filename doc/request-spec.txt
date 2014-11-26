@@ -36,35 +36,36 @@ Responses shall be obtained from the server via HTTP requests to the specified U
 Most requests shall be made via an HTTP GET request with a header in the following format:
 
 
-   GET /<path>/<script> HTTP/1.1
-   host: http://www.recipeserver.com/
+GET /<path>/<script> HTTP/1.1
+host: http://www.recipeserver.com/
 
 
-Creation requests for cookbooks and recipes shall be made via an HTTP POST request with a header in the following format:
+Creation requests for cookbooks and recipes shall be made via a multipart HTTP POST request with a header in the following format (see http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html for details on the multipart/form-data content-type)::
 
 
-   POST /<path>/create HTTP/1.1
-   content-type: application/x-www-form-urlencoded
-   host: http://www.recipeserver.com/
-   content-length: <parameter length>
+POST /<path>/create HTTP/1.1
+content-type: multipart/form-data; boundary=<boundary>
+host: http://www.recipeserver.com/
+content-length: <parameter length>
 
 
-   <parameter=value>
-   [&parameter=value]
-   ...
-Adding or updating the image of a recipe shall be done via HTTP POST as well:
+--<boundary>
+content-disposition: form-data; name=”<parameter>”[; filename=”<filename>”]
+[content-type: application/octet-stream]
 
 
-  POST /<path>/create HTTP/1.1
-  content-type: image/png
-  host: http://www.recipeserver.com/
-  content-length: <data length>
+<value>
+[--<boundary>
+…
+…
+…]
+--<boundary>--
 
 
-  <binary image data>
+Note particularly that each parameter is delimited by two dashes and the boundary included in the header (--<boundary>) and the final parameter is ended with two dashes, the boundary and two more dashes (--<boundary>--). Parameters default to ASCII text if no content-type is specified, which shall be the format for all data except for the image data, which shall include the header line content-type: application/octet-stream, and the option file=”<filename>” in the content-disposition.
 
 
-Since the creation requests require potentially long data such as descriptions to be sent, it's not possible to use a GET request with query parameters (many browsers are limited to slightly over 2000 characters in a URL).
+Since the creation requests require potentially long data such as descriptions and images to be sent, it's not possible to use a GET request with query parameters (many browsers are limited to slightly over 2000 characters in a URL).
 
 
 Additional lines may be specified in the header if it simplifies the implementation. However, the lines mentioned above must be present in all requests.
@@ -79,7 +80,7 @@ cookbooks/
 Cookbook-related scripts will be accessed via the cookbooks/ subdirectory on the server. The scripts contained in cookbooks/ will be:
 
 
-cookbooks/search        Search the database for cookbooks, with optional criteria to specify certain attributes. cookbooks/search will also allow the optional parameter show_only=<number> and sort_by=<attribute_name> to allow sorting of the output and restriction of requests on the database. sort_by will by default return attributes sorted in descending order - to specify ascending order instead, specify the attribute a -<attribute_name> (ie. with a leading negative sign).
+cookbooks/search        Search the database for cookbooks, with optional criteria to specify certain attributes. cookbooks/search will also allow the optional parameter show_only=<number> and sort_by=<attribute_name> to allow sorting of the output and restriction of requests on the database. sort_by will by default return attributes sorted in descending order - to specify ascending order instead, specify the attribute a -<attribute_name> (ie. with a leading negative sign). Finally, the rating parameter shall specify a minimum rating for returned recipes, and the rating_max parameter shall specify a maximum.
 
 
                                     REQUIRED PARAMETERS: none
@@ -89,6 +90,7 @@ cookbooks/search        Search the database for cookbooks, with optional criteri
                                     name
                                     author_name
                                     rating
+                        rating_max
                                     show_only
                                     sort_by
                                     dietary_restriction
@@ -156,13 +158,21 @@ cookbooks/rate             Rate a specified cookbook.
                                     OPTIONAL PARAMETERS: none
 
 
+cookbooks/update-image Update the image associated with a specified cookbook.
+
+
+                        REQUIRED PARAMETERS (in POST request):
+                        author_name
+                        cookbook_name
+
+
 recipes/
 
 
 Recipe-related scripts will be accessed via the recipes/ subdirectory on the server. The scripts contained in recipes/ will be:
 
 
-recipes/search          Search the database for recipes, with optional criteria to specify certain attributes. recipes/search will also support the show_only=<number> and sort_by=<attribute> options (see cookbooks/search above). In addition, it will support the options using=<ingredient> and using_only=<ingredient>. Both may be specified multiple times, and the final list will be used to filter recipes down to those which use (or only use) the specified ingredients.
+recipes/search          Search the database for recipes, with optional criteria to specify certain attributes. recipes/search will also support the show_only=<number> and sort_by=<attribute> options (see cookbooks/search above). In addition, it will support the options using=<ingredient> and using_only=<ingredient>. Both may be specified multiple times, and the final list will be used to filter recipes down to those which use (or only use) the specified ingredients. The rating and rating_max options shall be identical to cookbooks/search, and the prep_time and prep_time_max options shall support the same minimum/maximum behaviour.
 
 
                                      REQUIRED PARAMETERS: none
@@ -173,7 +183,9 @@ recipes/search          Search the database for recipes, with optional criteria 
                                      author_name
                                      instructions
                                      prep_time
+                         prep_time_max
                                      rating
+                         rating_max
                                      description
                                      show_only
                                      sort_by

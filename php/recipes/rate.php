@@ -86,7 +86,6 @@ function main()
     }
     else {
         $query = update_query();
-        echo "query second time: $query\n";
         $result = $mysqli->query($query);
         
         if ($result) {

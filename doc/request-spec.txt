@@ -12,7 +12,9 @@ is denoted by [ellipses...].
 As is standard in URL queries, the beginning of a parameter list is denoted
 by a question mark (?), and individual query parameters are separated by
 ampersands (&). Parameters may be in the form of simple <attributes>, or
-may be in the form of <attribute>=<value> pairs.
+may be in the form of <attribute>=<value> pairs. Multi-valued attributes are
+specified as repeated attributes followed by square brackets ([]), ie.
+<attribute>[]=<value1>&<attribute>[]=<value2>
 
 
 For example, in the 'search cookbooks by attribute' URL
@@ -50,7 +52,7 @@ Creation requests for cookbooks and recipes shall be made via a multipart HTTP P
 
 
    --<boundary>
-   content-disposition: form-data; name=”<parameter>”[; filename=”<filename>”]
+   content-disposition: form-data; name=”<parameter>”
    [content-type: application/octet-stream]
 
 
@@ -62,7 +64,7 @@ Creation requests for cookbooks and recipes shall be made via a multipart HTTP P
    --<boundary>--
 
 
-Note particularly that each parameter is delimited by two dashes and the boundary included in the header (--<boundary>) and the final parameter is ended with two dashes, the boundary and two more dashes (--<boundary>--). Parameters default to ASCII text if no content-type is specified, which shall be the format for all data except for the image data, which shall include the header line content-type: application/octet-stream, and the option file=”<filename>” in the content-disposition.
+Note particularly that each parameter is delimited by two dashes and the boundary included in the header (--<boundary>) and the final parameter is ended with two dashes, the boundary and two more dashes (--<boundary>--). Parameters default to ASCII text if no content-type is specified, which shall be the format for all data except for the image data, which shall include the header line content-type: application/octet-stream.
 
 
 Since the creation requests require potentially long data such as descriptions and images to be sent, it's not possible to use a GET request with query parameters (many browsers are limited to slightly over 2000 characters in a URL).
@@ -108,6 +110,7 @@ cookbooks/create         Create a new cookbook with specified criteria in POST r
 
                                     OPTIONAL PARAMETERS:
                                     dietary_restriction
+                                    image
 
 
 cookbooks/add             Add a recipe to a cookbook.
@@ -157,6 +160,7 @@ cookbooks/rate             Rate a specified cookbook.
 
                                     OPTIONAL PARAMETERS: none
 
+
 recipes/
 
 
@@ -199,10 +203,7 @@ recipes/create          Create a recipe with the specified parameters.
 
                                      OPTIONAL PARAMETERS:
                                      dietary_restriction
-
-
-                                     NOTE: to add an image to a recipe, a separate HTTP POST
-                                     request is required - see 'HTTP requests' above.
+                                     image
 
 
 recipes/delete           Remove a recipe from the database and all associated cookbooks.
@@ -231,10 +232,10 @@ recipes/rate              Rate a specified recipe.
 
 
 
-HTML encoding
+URL encoding
 
 
-All parameters in both GET and POST requests must be encoded to escape all HTML entities therein, to avoid confusing URL and request parsing. This encoding shall be performed by the standard libraries for the language, such as HttpServerUtility.HtmlEncode() in C#, or htmlentites() in PHP.
+All parameters in GET requests must be encoded to escape all illegal URL entities therein, to avoid confusing URL and request parsing. This encoding shall be performed by the standard libraries for the language, such as HttpServerUtility.UrlEncode() in C#, or urlencode() in PHP.
 
 
 JSON encoding

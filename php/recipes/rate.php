@@ -1,5 +1,8 @@
 <?php
 
+require "../errors.php";
+require "../escape.php";
+
 /**
  * Validate GET parameters
  */
@@ -9,7 +12,7 @@ function check_params()
 
     foreach ($params as $p) {
         if (!array_key_exists($p, $_GET)) {
-            printf(error("missing parameter $p"));
+            error("missing parameter $p");
             exit();
         }
     }
@@ -23,12 +26,12 @@ function check_params()
  *   AND recipe_name = '<recipe_name>'
  *   AND author_name = '<author_name>'
  */
-function update_query()
+function update_query($params)
 {
-    $query = "UPDATE user_recipe_ratings SET rating = " . $_GET["rating"]
-        . " WHERE user_name = '" . $_GET["username"]
-        . "' AND recipe_name = '" . $_GET["recipe_name"]
-        . "' AND author_name = '" . $_GET["author_name"] . "'";
+    $query = "UPDATE user_recipe_ratings SET rating = " . $params["rating"]
+        . " WHERE user_name = '" . $params["username"]
+        . "' AND recipe_name = '" . $params["recipe_name"]
+        . "' AND author_name = '" . $params["author_name"] . "'";
     return $query;
 }
 
@@ -40,30 +43,27 @@ function update_query()
  * INSERT INTO user_recipe_ratings VALUES('<username>','<recipe_name',
  *                                        '<author_name>',<rating>)
  */
-function insert_query()
+function insert_query($params)
 {
     $query = "INSERT INTO user_recipe_ratings VALUES ('"
-        . $_GET["username"] . "','" . $_GET["recipe_name"] . "','"
-        . $_GET["author_name"] . "','" . $_GET["rating"] . "')";
+        . $params["username"] . "','" . $params["recipe_name"] . "','"
+        . $params["author_name"] . "','" . $params["rating"] . "')";
     return $query;
 }
 
 /**
- * JSON formatted success message
+ * Escape all parameters to be used in query strings
+ * Param $mysqli: mysqli connection to use for string escaping
  */
-function success()
+function escape_params($mysqli)
 {
-    $ret = ["result" => "success", "error" => ""];
-    return json_encode($ret);
-}
+    $params = [];
 
-/**
- * JSON formatted error message
- */
-function error($message)
-{
-    $ret = ["result" => "failure", "error" => $message];
-    return json_encode($ret);
+    foreach ($_GET as $param => $value) {
+        $params[$param] = escape_value($mysqli, $param, $value);
+    }
+
+    return $params;
 }
 
 /**
@@ -71,28 +71,33 @@ function error($message)
  */
 function main()
 {
+    check_params();
+
     $mysqli = new mysqli("localhost", "mysql", "mysql", "recipedb");
 
     if ($mysqli->connect_errno) {
-        printf(error("database connection error"));
+        error("database connection error");
         exit();
     }
 
-    $query = insert_query();
+    $params = escape_params($mysqli);
+
+
+    $query = insert_query($params);
     $result = $mysqli->query($query);
 
     if ($result) {
-        printf(success());
+        success();
     }
     else {
         $query = update_query();
         $result = $mysqli->query($query);
         
         if ($result) {
-            printf(success());
+            success();
         }
         else {
-            printf(error("database update error"));
+            error("database update error" . $mysqli->error);
         }
     }
 }

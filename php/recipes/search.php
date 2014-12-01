@@ -1,5 +1,8 @@
 <?php   
 
+require "../errors.php";
+require "../escape.php";
+
 /**
  * Create clause equivalent to using parameter
  *
@@ -155,19 +158,21 @@ function limit_clause()
  * Param $attributes: attributes to accept. Will treat some specially,
  *  any without special casing are handled via freetext search for
  *  $value on $param in the database.
+ * Param $mysqli: mysqli connection to use for value escaping.
  */
-function where_clause($attributes)
+function where_clause($attributes, $mysqli)
 {
     $operator = " WHERE ";
     $clause = "";
 
     foreach ($_GET as $param => $value) {
-        if ($param != "using" && $param != "using_only") {
-            $value = html_entity_decode($value);
-        }
-        
         if (in_array($param, $attributes)) {
-            if ($param == "rating" || $param == "prep_time") {
+            $value = escape_value($mysqli, $param, $value);
+
+            if ($param == "rating"
+                || $param == "prep_time"
+                || $param == "portions")
+            {
                 $clause .= greater_clause($operator, $param, $value);
             }
             else if (strpos($param, "_max") !== false) {
@@ -181,7 +186,6 @@ function where_clause($attributes)
                 $clause .= using_only_clause($operator, $value);
             }
             else if ($param == "dietary_restriction") {
-                echo "restriction: " . $value . "<br>";
                 $clause .= dietary_restriction_clause($operator, $value);
             }
             else {
@@ -198,10 +202,10 @@ function where_clause($attributes)
 /**
  * Create the master query
  */
-function create_query($attributes)
+function create_query($attributes, $mysqli)
 {
     $query = "SELECT * FROM recipe";
-    $query .= where_clause($attributes);
+    $query .= where_clause($attributes, $mysqli);
     $query .= order_by_clause();
     $query .= limit_clause();
 
@@ -231,14 +235,11 @@ function main() {
     $mysqli = new mysqli("localhost", "mysql", "mysql", "recipedb");
 
     if ($mysqli->connect_errno) {
-        $error = ["result" => "failure",
-                  "error" => htmlentities("database connection error "
-                                          . $mysqli->connect_errno)];
-        printf(json_encode($error));
+        error("database connection error");
         exit();
     }
 
-    $query = create_query($attributes);
+    $query = create_query($attributes, $mysqli);
     $recipes = $mysqli->query($query);
 
     if ($recipes) {

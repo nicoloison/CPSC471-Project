@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.14-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.15-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: recipedb
 -- ------------------------------------------------------
--- Server version	10.0.14-MariaDB-log
+-- Server version	10.0.15-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -80,11 +80,11 @@ DROP TABLE IF EXISTS `dietary_restrictions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dietary_restrictions` (
-  `name` varchar(255) NOT NULL,
-  `ingredient` varchar(255) NOT NULL,
-  PRIMARY KEY (`name`),
-  KEY `ingredient` (`ingredient`),
-  CONSTRAINT `dietary_restrictions_ibfk_1` FOREIGN KEY (`ingredient`) REFERENCES `ingredient` (`name`)
+  `restriction_name` varchar(255) NOT NULL DEFAULT '',
+  `restriction_ingredient` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`restriction_name`,`restriction_ingredient`),
+  KEY `ingredient` (`restriction_ingredient`),
+  CONSTRAINT `dietary_restrictions_ibfk_1` FOREIGN KEY (`restriction_ingredient`) REFERENCES `ingredient` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -94,6 +94,7 @@ CREATE TABLE `dietary_restrictions` (
 
 LOCK TABLES `dietary_restrictions` WRITE;
 /*!40000 ALTER TABLE `dietary_restrictions` DISABLE KEYS */;
+INSERT INTO `dietary_restrictions` VALUES ('gluten free','macaroni'),('vegetarian','ground beef'),('vegetarian','steak');
 /*!40000 ALTER TABLE `dietary_restrictions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,10 +165,11 @@ CREATE TABLE `recipe_ingredient` (
   `ingredient_name` varchar(255) NOT NULL,
   `amount` float(6,2) NOT NULL,
   `amount_units` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`recipe_name`,`ingredient_name`),
+  `author_name` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`recipe_name`,`ingredient_name`,`author_name`),
   KEY `ingredient_name` (`ingredient_name`),
-  CONSTRAINT `recipe_ingredient_ibfk_1` FOREIGN KEY (`recipe_name`) REFERENCES `recipe` (`name`),
-  CONSTRAINT `recipe_ingredient_ibfk_2` FOREIGN KEY (`ingredient_name`) REFERENCES `ingredient` (`name`)
+  KEY `recipe_name` (`recipe_name`,`author_name`),
+  CONSTRAINT `recipe_ingredient_ibfk_1` FOREIGN KEY (`recipe_name`, `author_name`) REFERENCES `recipe` (`name`, `author_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -177,7 +179,7 @@ CREATE TABLE `recipe_ingredient` (
 
 LOCK TABLES `recipe_ingredient` WRITE;
 /*!40000 ALTER TABLE `recipe_ingredient` DISABLE KEYS */;
-INSERT INTO `recipe_ingredient` VALUES ('mac and cheese','cheese',3.00,'cups'),('mac and cheese','macaroni',8.00,'cups'),('shepherd\'s pie','cheese',1.00,'cups'),('shepherd\'s pie','corn',1.00,'cups'),('shepherd\'s pie','peas',1.00,'cups'),('shepherd\'s pie','potatoes',8.00,NULL),('steak dinner','steak',4.00,NULL);
+INSERT INTO `recipe_ingredient` VALUES ('mac and cheese','cheese',3.00,'cups','nloison'),('mac and cheese','macaroni',8.00,'cups','nloison'),('shepherd\'s pie','cheese',1.00,'cups','lmitchell'),('shepherd\'s pie','corn',1.00,'cups','lmitchell'),('shepherd\'s pie','ground beef',0.75,'kilograms','lmitchell'),('shepherd\'s pie','peas',1.00,'cups','lmitchell'),('shepherd\'s pie','potatoes',8.00,NULL,'lmitchell'),('steak dinner','steak',4.00,NULL,'adjuric');
 /*!40000 ALTER TABLE `recipe_ingredient` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,6 +236,7 @@ CREATE TABLE `user_recipe_ratings` (
 
 LOCK TABLES `user_recipe_ratings` WRITE;
 /*!40000 ALTER TABLE `user_recipe_ratings` DISABLE KEYS */;
+INSERT INTO `user_recipe_ratings` VALUES ('adjuric','shepherd\'s pie','lmitchell',4),('lmitchell','mac and cheese','nloison',5),('lmitchell','steak dinner','adjuric',5),('nloison','steak dinner','adjuric',2);
 /*!40000 ALTER TABLE `user_recipe_ratings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,4 +273,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-21 19:48:05
+-- Dump completed on 2014-12-05 10:35:41

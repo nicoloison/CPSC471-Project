@@ -1,0 +1,1 @@
+localhost/recipes/rate.php

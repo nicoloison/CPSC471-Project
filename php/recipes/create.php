@@ -1,7 +1,7 @@
 <?php
 
 require "../errors.php";
-require "../escape.php";
+require "../parse.php";
 
 /**
  * Validate POSTed parameters

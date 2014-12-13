@@ -1,1 +1,1 @@
-localhost/recipes/rate.php?username=lmitchell&recipe_name=mac%20and%20cheese
+curl "localhost/recipes/rate.php?username=lmitchell&recipe_name=mac%20and%20cheese"

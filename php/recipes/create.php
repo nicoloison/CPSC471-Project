@@ -1,78 +1,14 @@
 <?php
 
-require "../errors.php";
-require "../parse.php";
+require_once "../errors.php";
+require_once "../mysql-utils.php";
+require_once "../parse.php";
+require_once "../queries.php";
 
-/**
- * Validate POSTed parameters
- */
-function check_params($params)
-{    
-    foreach ($params as $p => $v) {
-        if (!$v && $p != "picture" && $p != "rating") {
-            error("missing parameter $p");
-            exit();
-        }
-    }
-}
-
-/**
- * Fill $params and $dietary_restrictions with appropriate values
- * passed in via POST
- */
-function fill_params(&$params, &$dietary_restrictions, $mysqli)
-{
-    foreach ($_POST as $param => $value) {
-        if (array_key_exists($param, $params)) {
-            $params[$param] = escape_value($mysqli, $param, $value);
-        }
-    }
-
-    $params["picture"] = "pics/" . $params["name"];
-}
-
-/**
- * Create a query to insert recipe into database
- *
- * INSERT INTO recipe VALUES(
- *   '<name>', '<author_name>', '<instructions>', '<picture>',
- *   prep_time, portions, NULL, '<description>')
- */
 function create_query($mysqli)
 {
-    $params = [
-               "name" => null,
-               "author_name" => null,
-               "instructions" => null,
-               "picture" => null,
-               "prep_time" => null,
-               "portions" => null,
-               "rating" => "NULL",
-               "description" => null,
-               ];
-
-    $dietary_restrictions = [];
-
-    fill_params($params, $dietary_restrictions, $mysqli);
-    check_params($params);
-
-    $query = "INSERT INTO recipe VALUES (";
-
-    reset($params);
-    foreach ($params as $param => $value) {
-        if ($param != "prep_time"
-            && $param != "portions"
-            && $param != "rating")
-        {
-            $value = "'$value'";
-        }
-
-        $query .= "$value,";
-    }
-
-    $query = substr($query, 0, -1);
-    $query .= ")";
-
+    $query = insert("recipe", $params);
+    
     return $query;
 }
 
@@ -85,8 +21,8 @@ function create_query($mysqli)
  */
 function upload_image()
 {
-    $name = $_POST["name"];
-
+    $name = $_POST["name"] . "-" . $_POST["author_name"];
+    
     if ($_FILES["image"]) {
         $path = "/srv/http/pics/" . $name . ".png";
 
@@ -102,6 +38,7 @@ function upload_image()
         }
         else {
             success();
+            exit();
         }
     }
 }
@@ -111,21 +48,33 @@ function upload_image()
  */
 function main()
 {
-    $mysqli = new mysqli("localhost", "mysql", "mysql", "recipedb");
+    $required = ["name", "author_name", "instructions",
+                 "prep_time", "portions", "description"];
+    $optional = ["dietary_restriction", "image"];
 
-    if ($mysqli->connect_errno) {
-        error("database connection error " . $mysqli->error);
-        exit();
-    }
+    require_params($required, $optional, $_POST);
 
-    $query = create_query($mysqli);
+    $mysqli = recipedb_connect();
+    $params = parse_post($mysqli);
+
+    $quoted = [quote($params["name"]),
+               quote($params["author_name"]),
+               quote("pics/" . $params["name"] . "-" . $params["author_name"]),
+               quote($params["instructions"]),
+               $params["prep_time"],
+               $params["portions"],
+               null,
+               quote($params["description"])];
+
+    $query = insert("recipe", $quoted);
     $result = $mysqli->query($query);
 
     if ($result) {
         upload_image();
+        success();
     }
     else {
-        error("database insertion error " . $mysqli->error);
+        recipedb_error("database insertion error", $mysqli);
     }
 }
 

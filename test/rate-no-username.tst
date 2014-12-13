@@ -1,1 +1,1 @@
-localhost/recipes/rate.php
+curl localhost/recipes/rate.php

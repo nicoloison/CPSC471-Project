@@ -1,6 +1,7 @@
 <?php   
 
 require_once "../errors.php";
+require_once "../mysql-utils.php";
 require_once "../parse.php";
 require_once "../queries.php";
 
@@ -32,14 +33,15 @@ function create_query($attributes, $mysqli)
  * Main method
  */
 function main() {
-    /* Connect to database with mysql user, password mysql */
-    $mysqli = new mysqli("localhost", "mysql", "mysql", "recipedb");
+    $required = [];
+    $optional = ["name", "author_name", "instructions", "prep_time",
+                 "prep_time_max", "rating", "rating_max", "description",
+                 "show_only", "sort_by", "using", "using_only",
+                 "dietary_restriction"];
 
-    if ($mysqli->connect_errno) {
-        error("database connection error");
-        exit();
-    }
+    require_params($required, $optional, $_GET);
 
+    $mysqli = recipedb_connect();
     $attributes = parse_get($mysqli);
     $query = create_query($attributes, $mysqli);
     $recipes = $mysqli->query($query);

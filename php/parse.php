@@ -24,7 +24,7 @@ function escape_value($mysqli, $param, $value)
 
         return $values;
     }
-    
+
     return $mysqli->real_escape_string($value);
 }
 
@@ -35,14 +35,48 @@ function escape_all_values(&$params, $mysqli)
     }
 }
 
-function require_params($required)
+function require_params($required, $optional, $params)
 {
     foreach ($required as $r) {
-        if ($_GET[$r] == null) {
+        if ($params[$r] == null) {
             error("missing parameter $r");
             exit();
         }
     }
+
+    foreach ($params as $p => $v) {
+        if (!in_array($p, $required) && !in_array($p, $optional)) {
+            error("unknown parameter $p");
+            exit();
+        }
+    }
+}
+
+function parse_array($mysqli, $array, &$attributes)
+{
+    foreach ($array as $param => $value) {
+        if (array_key_exists($param, $attributes)) {
+            $attributes[$param] = escape_value($mysqli, $param, $value);
+        }
+        else {
+            error("unknown parameter $param\n");
+        }
+    }
+}
+
+function parse_post($mysqli)
+{
+    $attributes = ["name" => null,
+                   "author_name" => null,
+                   "instructions" => null,
+                   "prep_time" => null,
+                   "portions" => null,
+                   "description" => null,
+                   "dietary_restriction" => null,
+                   "@image" => null];
+
+    parse_array($mysqli, $_POST, $attributes);
+    return $attributes;
 }
 
 function parse_get($mysqli)
@@ -59,22 +93,22 @@ function parse_get($mysqli)
                    "using_only" => null,
                    "dietary_restriction" => null,
                    "recipe_name" => null,
+                   "recipe_author" => null,
                    "username" => null,
                    "cookbook_name" => null,
+                   "cookbook_author" => null,
                    "show_only" => null,
                    "sort_by" => null,
                    ];
 
-    foreach ($_GET as $param => $value) {
-        if (array_key_exists($param, $attributes)) {
-            $attributes[$param] = escape_value($mysqli, $param, $value);
-        }
-        else {
-            error("unknown parameter $param\n");
-        }
-    }
+    parse_array($mysqli, $_GET, $attributes);
 
     return $attributes;
+}
+
+function quote($string)
+{
+    return "'" . $string . "'";
 }
 
 ?>

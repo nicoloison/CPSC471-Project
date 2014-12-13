@@ -5,14 +5,6 @@ require_once "../mysql-utils.php";
 require_once "../queries.php";
 require_once "../parse.php";
 
-/**
- * Create a query to update an entry already in the database
- *
- * UPDATE user_recipe_ratings SET rating = <rating>
- *   WHERE user_name = '<username>'
- *   AND recipe_name = '<recipe_name>'
- *   AND author_name = '<author_name>'
- */
 function update_query($params)
 {
     $query = update("user_recipe_ratings", "rating", $params["rating"]);
@@ -27,19 +19,14 @@ function update_query($params)
  */
 function main()
 {
-    $required = ["username", "author_name", "recipe_name", "rating"];
+    $required = ["username", "author_name", "cookbook_name", "rating"];
     $optional = [];
     require_params($required, $optional, $_GET);
-    
+
     $mysqli = recipedb_connect();
 
     $params = parse_get($mysqli);
-    $sorted = [quote($params["username"]),
-               quote($params["recipe_name"]),
-               quote($params["author_name"]),
-               $params["rating"]];
-
-    $query = insert("user_recipe_ratings", $sorted);
+    $query = insert("user_cookbook_rating", $params);
     $result = $mysqli->query($query);
 
     if ($result) {

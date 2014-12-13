@@ -21,7 +21,9 @@ function recipedb_connect()
 function delete_from($mysqli, $table, $parameters)
 {
     foreach ($parameters as $p => $v) {
-        $parameters[$p] = quote($v);
+        if ($v) {
+            $parameters[$p] = quote($v);
+        }
     }
 
     $query = delete($table) . where_equal($parameters);

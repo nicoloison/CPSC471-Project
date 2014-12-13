@@ -1,4 +1,4 @@
--- URL query parameters and JSON responses --
+﻿-- URL query parameters and JSON responses --
 
 
 Conventions
@@ -38,30 +38,30 @@ Responses shall be obtained from the server via HTTP requests to the specified U
 Most requests shall be made via an HTTP GET request with a header in the following format:
 
 
-   GET /<path>/<script> HTTP/1.1
-   host: http://www.recipeserver.com/
+GET /<path>/<script> HTTP/1.1
+host: http://www.recipeserver.com/
 
 
 Creation requests for cookbooks and recipes shall be made via a multipart HTTP POST request with a header in the following format (see http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html for details on the multipart/form-data content-type)::
 
 
-   POST /<path>/create HTTP/1.1
-   content-type: multipart/form-data; boundary=<boundary>
-   host: http://www.recipeserver.com/
-   content-length: <parameter length>
+POST /<path>/create HTTP/1.1
+content-type: multipart/form-data; boundary=<boundary>
+host: http://www.recipeserver.com/
+content-length: <parameter length>
 
 
-   --<boundary>
-   content-disposition: form-data; name=”<parameter>”
-   [content-type: application/octet-stream]
+--<boundary>
+content-disposition: form-data; name=”<parameter>”
+[content-type: application/octet-stream]
 
 
-   <value>
-   [--<boundary>
-   ...
-   ...
-   ...]
-   --<boundary>--
+<value>
+[--<boundary>
+…
+…
+…]
+--<boundary>--
 
 
 Note particularly that each parameter is delimited by two dashes and the boundary included in the header (--<boundary>) and the final parameter is ended with two dashes, the boundary and two more dashes (--<boundary>--). Parameters default to ASCII text if no content-type is specified, which shall be the format for all data except for the image data, which shall include the header line content-type: application/octet-stream.
@@ -92,7 +92,7 @@ cookbooks/search        Search the database for cookbooks, with optional criteri
                                     name
                                     author_name
                                     rating
-                                    rating_max
+                        rating_max
                                     show_only
                                     sort_by
                                     dietary_restriction
@@ -105,11 +105,9 @@ cookbooks/create         Create a new cookbook with specified criteria in POST r
                                     name
                                     author_name
                                     description
-                                    rating
 
 
                                     OPTIONAL PARAMETERS:
-                                    dietary_restriction
                                     image
 
 
@@ -117,21 +115,24 @@ cookbooks/add             Add a recipe to a cookbook.
 
 
                                     REQUIRED PARAMETERS:
-                                    name
-                                    author_name
-                                    description
+                                    cookbook_name
+                                    cookbook_author
+                                    recipe_name
+                                    recipe_author
 
 
                                     OPTIONAL PARAMETERS:
-                                    dietary restriction
+                                    none
 
 
 cookbooks/remove        Remove a recipe from a cookbook.
 
 
                                     REQUIRED PARAMETERS:
-                                    name
-                                    author_name
+                                    cookbook_name
+                                    cookbook_author
+                                    recipe_name
+                                    recipe_author
 
 
                                     OPTIONAL PARAMETERS: none

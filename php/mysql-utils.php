@@ -9,7 +9,7 @@ function recipedb_error($message, $mysqli)
 
 function recipedb_connect()
 {
-    $mysqli = new mysqli("localhost", "mysql", "mysql", "recipedb");
+    $mysqli = new mysqli("localhost", "", "me", "recipedb");
     if ($mysqli->connect_errno) {
         recipedb_error("database connection error", $mysqli);
         exit();

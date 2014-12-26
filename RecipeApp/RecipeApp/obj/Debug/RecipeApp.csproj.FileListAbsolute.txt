@@ -1,0 +1,17 @@
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\bin\Debug\RecipeApp.exe.config
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\bin\Debug\RecipeApp.exe
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\bin\Debug\RecipeApp.pdb
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\MainWindow.baml
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\MainWindow.g.cs
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\App.g.cs
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp_MarkupCompile.cache
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp.g.resources
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp.Properties.Resources.resources
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp.csproj.GenerateResource.Cache
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp.exe
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp.pdb
+C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\obj\Debug\RecipeApp.csprojResolveAssemblyReference.cache
+C:\Users\garance\Desktop\CPSC471-Project\RecipeApp\RecipeApp\bin\Debug\RecipeApp.exe.config
+C:\Users\garance\Desktop\CPSC471-Project\RecipeApp\RecipeApp\obj\Debug\RecipeApp.exe
+C:\Users\garance\Desktop\CPSC471-Project\RecipeApp\RecipeApp\obj\Debug\RecipeApp.pdb

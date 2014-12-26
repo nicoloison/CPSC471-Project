@@ -1,0 +1,125 @@
+﻿<Window x:Class="RecipeApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RecipeApp"
+        WindowState="Maximized">
+    <Grid x:Name="MainGrid">
+
+        <Grid x:Name="HomeGrid" Visibility="Visible">
+            <Grid.Background>
+                <ImageBrush ImageSource= "C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\Images\370799.jpg" />
+            </Grid.Background>
+            <TextBlock x:Name="HomeMessage" 
+               VerticalAlignment="Top"
+               HorizontalAlignment="Center"
+               Width ="700" Height="92" 
+               Margin="0,100,0,0"
+               Text="COLLECTIVE COOKBOOK"
+               TextAlignment="Center"
+               FontFamily="Book Antica" FontSize="36"
+               Foreground="White"
+              />
+            <Button Name="SearchButton" Content="Start Search" VerticalAlignment="Bottom" BorderBrush="Transparent" HorizontalAlignment="Center" Margin="0, 0, 0,300 " Foreground="White" Background="Transparent" FontSize="30" FontFamily="Book Antica"  Click="SearchButton_Click"/>
+        </Grid>
+
+        <Grid x:Name="SearchGrid" Visibility="Collapsed">
+            <Grid.Background>
+                <ImageBrush ImageSource= "C:\Users\garance\Documents\GitHub\RecipeApp\RecipeApp\Images\370799.jpg" />
+            </Grid.Background>
+            <StackPanel Name="SearchButtons" VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Name="RecipesSearch" Foreground="White" Background="Transparent" Content="Recipes" Click="RecipesSearch_Click" FontFamily="Book Antica" FontSize="30" BorderBrush="Transparent"/>
+                <Label Width="200"/>
+                <Button Name="CookbooksSearch" Foreground="White" Content="Cookbooks" Click="CookbooksSearch_Click" Background="Transparent" FontFamily="Book Antica" FontSize="30" BorderBrush="Transparent"/>
+            </StackPanel>
+            <StackPanel Name="RecipeFields" Visibility="Collapsed" Margin="0, 100,800, 0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Label Name="RecipeName" Content="Name:" Foreground="White" FontSize="20"/>
+                <Label Name="RecipeAuthor" Content="Author:" Foreground="White" FontSize="20"/>
+                <Label Name="RecipePrepTime" Content="Minimum Preparation Time (in minute): " Foreground="White" FontSize="20"/>
+                <Label Name="RecipeRating" Content="Rating:" Foreground="White" FontSize="20"/>
+                <Label Name="RecipeIngredientIncluding" Content="Using the following ingredients (eg. apples, eggs, salt):" Foreground="White" FontSize="20"/>
+                <Label Name="RecipeIngredientExclusive" Content="Using only the following ingredients (eg. apples, eggs, salt):" Foreground="White" FontSize="20"/>
+                <Label Name="RecipeDietaryRestrictions" Content="Dietary Restrictions:" Foreground="White" FontSize="20"/>
+            </StackPanel>
+            <StackPanel Name="RecipeInputs" Visibility="Collapsed" Margin="600, 100,0, 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Label Height="10"/>
+                <TextBox Name="RecipeNameInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <TextBox Name="RecipeAuthorInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <TextBox Name="PrepTimeInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <StackPanel Name="RatingOptionsR" Orientation="Horizontal" Width="200" Height="25">
+                    <Button Name="rate0R" BorderBrush="Transparent" FontSize ="15" Background="Transparent" Content="0" Foreground="White" FontWeight="Bold" Click="rate0_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate1R" BorderBrush="Transparent" FontSize ="15" Background="Transparent" Content="1" Foreground="White" FontWeight="Bold" Click="rate1_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate2R" BorderBrush="Transparent" FontSize ="15" Background="Transparent" Content="2" Foreground="White" FontWeight="Bold" Click="rate2_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate3R" BorderBrush="Transparent" FontSize ="15" Background="Transparent" Content="3" Foreground="White" FontWeight="Bold" Click="rate3_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate4R" BorderBrush="Transparent" FontSize ="15" Background="Transparent" Content="4" Foreground="White" FontWeight="Bold" Click="rate4_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate5R" BorderBrush="Transparent" FontSize ="15" Background="Transparent" Content="5" Foreground="White" FontWeight="Bold" Click="rate5_Click"/>
+                </StackPanel>
+                <Label Height="10"/>
+                <TextBox Name="IngredientIncInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <TextBox Name="IngredientExInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <StackPanel Name="TypeOptionsR" Orientation="Horizontal" Width="200" Height="25">
+                    <Button Name="VegOptionR" Content="Vegetarian" BorderBrush="Transparent" Background="Transparent" FontWeight="Bold" Foreground="White" Click="VegOption_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="GlutenOptionR" Content="Gluten Free" BorderBrush="Transparent" Background="Transparent" FontWeight="Bold" Foreground="White" Click="GlutenOption_Click"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Name="CookbookFields" Visibility="Collapsed" Margin="0, 100,900, 0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Label Name="CookbookName" Content="Name:" Foreground="White" FontSize="20" HorizontalAlignment="Right"/>
+                <Label Name="CookbookAuthor" Content="Author:" Foreground="White" FontSize="20" HorizontalAlignment="Right"/>
+                <Label Name="CookbookRating" Content="Rating:" Foreground="White" FontSize="20" HorizontalAlignment="Right"/>
+                <Label Name="CookbookType" Content="Dietary Restriction:" Foreground="White" FontSize="20" HorizontalAlignment="Right"/>
+            </StackPanel>
+            <StackPanel Name="CookbookInputs" Visibility="Collapsed" Margin="500, 100,0, 0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Label Height="10"/>
+                <TextBox Name="CookbookNameInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <TextBox Name="CookbookAuthorInput" Width="200" Height="25"/>
+                <Label Height="10"/>
+                <StackPanel Name="RatingOptions" Orientation="Horizontal" Width="200" Height="25">
+                    <Button Name="rate0" Content="0" Foreground="White" BorderBrush="Transparent" FontSize ="15" Background="Transparent" FontWeight="Bold" Click="rate0_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate1" Content="1" Foreground="White" BorderBrush="Transparent"  FontSize ="15" Background="Transparent" FontWeight="Bold" Click="rate1_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate2" Content="2" Foreground="White" BorderBrush="Transparent" FontSize ="15" Background="Transparent" FontWeight="Bold" Click="rate2_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate3" Content="3" Foreground="White" BorderBrush="Transparent" FontSize ="15" Background="Transparent" FontWeight="Bold" Click="rate3_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate4" Content="4" Foreground="White" BorderBrush="Transparent" FontSize ="15" Background="Transparent" FontWeight="Bold" Click="rate4_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="rate5" Content="5" Foreground="White" BorderBrush="Transparent" FontSize ="15" Background="Transparent" FontWeight="Bold" Click="rate5_Click"/>
+                </StackPanel>
+                <Label Height="10"/>
+                <StackPanel Name="TypeOptions" Orientation="Horizontal" Width="200" Height="30">
+                    <Button Name="VegOption" Content="Vegetarian" FontWeight="Bold" BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="VegOption_Click"/>
+                    <Label Width="10"/>
+                    <Button Name="GlutenOption" Content="Gluten Free" FontWeight="Bold" BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="GlutenOption_Click"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Button Name="StartSearchButton" Content="SEARCH" BorderBrush="Transparent" Background="Transparent" FontFamily="Book Antica" FontSize="25" Foreground="White" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50,0,0,50" Width="100" Height="100" Visibility="Collapsed" Click="StartSearchButton_Click"/>
+            <StackPanel Name="Results" Margin="0,0,0,180" VerticalAlignment="Bottom" Visibility="Collapsed" Orientation="Horizontal">
+                <Label Width="20"/>
+                <Label Name="ResultSearch0" FontSize="15" FontWeight="Bold" Foreground="Wheat" Width="300" />
+                <Label Width="20"/>
+                <Label Name="ResultSearch1" FontSize="15" FontWeight="Bold" Foreground="Wheat" Width="300" />
+                <Label Width="20"/>
+                <Label Name="ResultSearch2" FontSize="15" FontWeight="Bold" Foreground="Wheat" Width="300" />
+                <Label Width="20"/>
+                <Label Name="ResultSearch3" FontSize="15" FontWeight="Bold" Foreground="Wheat" Width="300" />
+            </StackPanel>
+                
+            <Button Name="HomeButton" Content="HOME" Foreground="White" Click="HomeButton_Click" FontSize ="25" Background="Transparent" BorderBrush="Transparent" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,50,50" Width="100" Height="100"/>
+        </Grid>
+     
+
+    </Grid>
+</Window>
